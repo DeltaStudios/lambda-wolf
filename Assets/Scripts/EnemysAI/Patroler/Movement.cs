@@ -21,9 +21,10 @@ public class Movement : MonoBehaviour {
 		player = GameObject.FindGameObjectWithTag ("Player");  //remember, if player is null Following_Player will always be false. 
 		StartCoroutine (CheckGround()); 
 		StartCoroutine (CalculateForce()); 
+		Combat.foundPlayer += startFollowingPlayer; 
+		Combat.lostPlayer += resumePatrol; 
 	}
-
-
+		
 
 	IEnumerator CheckGround(){
 		//if you are on patrol do a raycast. If there is no ground infront of you, recalculate the direction in which you apply the force used to move, 
@@ -36,6 +37,10 @@ public class Movement : MonoBehaviour {
 				StartCoroutine (ReCalculateDirection ());
 			}
 			yield return new WaitForSeconds (0.5f); 
+		}
+		while(Following_Player&&!ImDead){
+			StartCoroutine (ReCalculateDirection ());
+			yield return new WaitForSeconds (1f); 
 		}
 		yield return null; 
 	}
@@ -82,6 +87,18 @@ public class Movement : MonoBehaviour {
 			yield return new WaitForSeconds (Time.fixedDeltaTime); 
 		}
 		yield return null; 
+	}
+
+
+	//event functions. 
+	void startFollowingPlayer(){
+		Debug.Log ("Found Player"); 
+		Following_Player = true; 
+	}
+
+	void resumePatrol(){
+		Debug.Log ("Lost Player"); 
+		Following_Player = false; 
 	}
 
 
