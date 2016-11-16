@@ -23,7 +23,13 @@ public class AI : MonoBehaviour {
 
 	void Start () {
 		//inicializing variables. 
-		groundCheckRayCastDirection = new Vector3 (0f,-1f, 2f);
+		if (transform.forward.z < 0) {
+			groundCheckRayCastDirection = new Vector3 (0f, -1f, -2f);
+
+		} else {
+			groundCheckRayCastDirection = new Vector3 (0f, -1f, 2f);
+			turning_direction_var_control = -1; 
+		}
 		direction = Vector3.zero; 
 		myRigid = gameObject.GetComponent<Rigidbody> (); 
 		player = gameObject.GetComponent<Transform> (); 
@@ -123,7 +129,7 @@ public class AI : MonoBehaviour {
 
 		turning_direction_var_control *= -1; 
 		for (int n = 0; n < 18; n++) {
-			transform.eulerAngles = new Vector3 (0, transform.eulerAngles.y - 10* turning_direction_var_control, 0); 
+			transform.eulerAngles = new Vector3 (0, transform.eulerAngles.y + 10* turning_direction_var_control, 0); 
 			yield return new WaitForSeconds (Time.fixedDeltaTime); 
 		}
 		groundCheckRayCastDirection.z *= -1; 
@@ -131,7 +137,9 @@ public class AI : MonoBehaviour {
 	}
 	IEnumerator Attack(){
 		//do some damage to the player. 
-		Debug.Log("Hiting");
+		if (player != null) {
+			Debug.Log ("Hiting");
+		}
 		//reset move timer. 
 		time = 0.1f; 
 		yield return new WaitForSeconds(1f);
