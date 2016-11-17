@@ -9,7 +9,7 @@ using System.Collections;
 	It is currently set for the z axis. 
 */
 
-public class AI : MonoBehaviour {
+public class AI_Patroler: MonoBehaviour {
 	[SerializeField]
 	private AnimationCurve SpeedFunc; 
 	[SerializeField]
