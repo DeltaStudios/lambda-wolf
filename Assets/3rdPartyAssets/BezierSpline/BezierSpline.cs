@@ -148,7 +148,7 @@ public class BezierSpline : MonoBehaviour {
 				t = (t - starts [i]) / (1f - starts [i]);
 			else
 				t = (t - starts [i]) / (starts [i + 1] - starts [i]);
-			return transform.TransformPoint(Bezier.GetPoint(points[i*3], points[i*3 + 1], points[i*3 + 2], points[i*3 + 3], t));
+			return transform.TransformPoint(Bezier.GetPointUniform(points[i*3], points[i*3 + 1], points[i*3 + 2], points[i*3 + 3], t));
 		} 
 
 		return Vector3.zero;
@@ -162,7 +162,7 @@ public class BezierSpline : MonoBehaviour {
 				t = (t - starts [i]) / (1f - starts [i]);
 			else
 				t = (t - starts [i]) / (starts [i + 1] - starts [i]);
-			return transform.TransformPoint (Bezier.GetFirstDerivative (points [i * 3], points [i * 3 + 1], points [i * 3 + 2], points [i * 3 + 3], t)) - transform.position;
+			return transform.TransformPoint (Bezier.GetFirstDerivativeUniform (points [i * 3], points [i * 3 + 1], points [i * 3 + 2], points [i * 3 + 3], t)) - transform.position;
 		} 
 
 		return Vector3.zero;
@@ -215,15 +215,14 @@ public class BezierSpline : MonoBehaviour {
 	}
 			
 	void RecalculateStarts(){
-		float totalLength = 0;
-
-		for (int i = 0; i < CurveCount; i++) {
-			totalLength += Bezier.GetLength (points [i * 3], points [i * 3 + 1], points [i * 3 + 2], points [i * 3 + 3]);
-		}
-
+		
 		//This should be true: starts [0] = 0 for this to work
 		for (int i = 1; i < CurveCount; i++) {
-			starts [i] = starts[i-1] + Bezier.GetLength (points [(i-1) * 3], points [(i-1) * 3 + 1], points [(i-1) * 3 + 2], points [(i-1) * 3 + 3])/totalLength;
+			starts [i] = starts[i-1] + Bezier.GetLength (points [(i-1) * 3], points [(i-1) * 3 + 1], points [(i-1) * 3 + 2], points [(i-1) * 3 + 3]);
+		}
+		float totalLength = starts [CurveCount - 1] + Bezier.GetLength (points [points.Length-4], points [points.Length-3], points [points.Length-2], points [points.Length-1]);
+		for (int i = 1; i < CurveCount; i++) {
+			starts [i] = starts[i]/totalLength;
 		}
 	}
 
