@@ -15,6 +15,6 @@ public class twoDFy : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		transform.position = ground.GetPoint(counterpart.transform.position.x/100+0.5f)+Vector3.up*counterpart.transform.position.y;
-		transform.rotation = Quaternion.LookRotation(ground.GetDirection(counterpart.transform.position.x / 100 + 0.5f))*Quaternion.AngleAxis(counterpart.transform.rotation.z,Vector3.Cross(Vector3.up, ground.GetDirection(counterpart.transform.position.x/100+0.5f)));
+		transform.rotation = Quaternion.LookRotation(Vector3.Cross(ground.GetDirection(counterpart.transform.position.x / 100 + 0.5f), Vector3.up))*counterpart.transform.rotation;
 	}
 }
