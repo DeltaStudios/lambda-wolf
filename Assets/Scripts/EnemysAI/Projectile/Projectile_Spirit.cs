@@ -13,6 +13,7 @@ public class Projectile_Spirit : MonoBehaviour {
 	private float timeToReset = 0;
 	public float speed = 5f, lifeTime = 3f; //the bullet lives 3 second by default. 
 	private bool startCounting = false; 
+	private TrailRenderer myTrail; 
 	public Vector2 Direction{
 		set{ direction = value; }
 	}
@@ -22,11 +23,15 @@ public class Projectile_Spirit : MonoBehaviour {
 	public bool RestartBool {
 		set{ startCounting = value; }
 	}	
+	public bool Trail {
+		set{ myTrail.enabled = value; }
+	}
 
 
 	// Use this for initialization
 	void Start () {
-		
+		myTrail = gameObject.GetComponent<TrailRenderer> (); 
+		transform.position = Vector2.zero; 
 	}
 
 	void FixedUpdate(){
@@ -44,6 +49,7 @@ public class Projectile_Spirit : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D something){
 		if (something.tag == "Player") {
+			Trail = false; 
 			transform.position = Vector2.zero;//or whatever the reset position is. 
 			direction = Vector2.zero; 
 			//damage the player

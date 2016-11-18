@@ -26,7 +26,7 @@ public class AI_Shooter : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//inicialize variables
-		origin = new Vector3 (0.1f,-1);//0.1f so that it doent try to go back from the other side when slerping.  
+		origin = new Vector2 (0.1f,-1);//0.1f so that it doent try to go back from the other side when slerping.  
 		target = transform.right.normalized; 
 		projectile_script = projectile_instance.GetComponent<Projectile_Spirit> (); 
 		//start the cycle. 
@@ -52,7 +52,6 @@ public class AI_Shooter : MonoBehaviour {
 				if (hit.collider.tag == "Player") {
 					//if you find the player, get the direction in which to shoot the bullet and if you are not already shooting, shoot. 
 					playerDirection = (hit.point - new Vector2(transform.position.x, transform.position.y) ).normalized; 
-					Debug.Log (hit.point); 
 					if(!alreadyShooting){//avoid calling the routing if you are already perfoming it by using this bool as a lock state. See shoot coroutine. 
 						StartCoroutine (Shoot ()); 
 						alreadyShooting = true; 
@@ -75,9 +74,10 @@ public class AI_Shooter : MonoBehaviour {
 	IEnumerator LoadProjectile(){
 		//prepare the bullet. See the projectile_spirit script. 
 		projectile_instance.position = barrel.position; 
-		projectile_script.Direction = Vector3.zero; 
+		projectile_script.Direction = Vector2.zero; 
 		projectile_script.RestartBool = false; 
-		projectile_script.ResetTime = 0;
+		projectile_script.ResetTime = 0; 
+		projectile_script.Trail = true; 
 		yield return null;   
 	}
 
