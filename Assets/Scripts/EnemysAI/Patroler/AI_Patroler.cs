@@ -3,10 +3,6 @@ using System.Collections;
 /*this script uses only coroutines, it works as a single big cicle that chains routines together one after another, taking 
 	decisions along the way, imagine an ol' school  flow chart. There are only 2 global bool control variables, if it found
 	the player t/f or if he is dead t/f. If he is dead, all the cicle shuts down inmediately. 
-
-	Depending on what the team decided would be the axis in which to move, (that is to move along the x or the z), the correct
-	axis needs to be set to 0 for the direction calculated inside the coroutine called 'IEnumerator CalculateDirection()'. 
-	It is currently set for the z axis. 
 */
 
 public class AI_Patroler: MonoBehaviour {
@@ -15,39 +11,34 @@ public class AI_Patroler: MonoBehaviour {
 	[SerializeField]
 	private float speed = 0, range = 1; 
 	private float time = 0, force = 0, targetAngle = 0, turning_direction_var_control = 1;
-	private Vector3 direction, groundCheckRayCastDirection; 
+	private Vector2 direction, groundCheckRayCastDirection; 
 	private bool foundPlayer = false, imDead = false; 
-	private RaycastHit hit, hit2;
-	private Rigidbody myRigid; 
+	private RaycastHit2D hit, hit2;
+	private Rigidbody2D myRigid; 
 	private Transform player; 
 
 	void Start () {
 		//inicializing variables. 
-		if (transform.forward.z < 0) {
-			groundCheckRayCastDirection = new Vector3 (0f, -1f, -2f);
+		if (transform.right.x < 0) {
+			groundCheckRayCastDirection = new Vector2 (-2f, -1f);
 
 		} else {
-			groundCheckRayCastDirection = new Vector3 (0f, -1f, 2f);
+			groundCheckRayCastDirection = new Vector2 (2f, -1f);
 			turning_direction_var_control = -1; 
 		}
-		direction = Vector3.zero; 
-		myRigid = gameObject.GetComponent<Rigidbody> (); 
+		direction = Vector2.zero; 
+		myRigid = gameObject.GetComponent<Rigidbody2D> (); 
 		player = gameObject.GetComponent<Transform> (); 
 
 		//start the cicle
 		StartCoroutine(CheckForPlayer()); 
 		StartCoroutine (Die ()); 
 	}
-	void Update(){
-		if(Input.GetKeyDown(KeyCode.Space)){//quick way to kill the bear. 
-			imDead = !imDead; 
-		}
-	}
 	
 	IEnumerator CheckForPlayer(){
 		//check for player infront of me. 
-		Physics.Raycast (transform.position, transform.forward.normalized, out hit, 3f); 
-		Debug.DrawLine (transform.position, transform.position + (transform.forward.normalized * 3f), Color.red); //just so you can see it in the inspector. 
+		hit = Physics2D.Raycast (transform.position, transform.right.normalized , 3f); 
+		Debug.DrawLine (transform.position, transform.position + (transform.right.normalized * 3f), Color.red); //just so you can see it in the inspector. 
 		if (hit.collider != null) {
 			if (hit.collider.tag == "Player") {
 				foundPlayer = true; 
@@ -67,12 +58,14 @@ public class AI_Patroler: MonoBehaviour {
 	}
 	IEnumerator CheckForGround(){
 		//check if there is ground ahead. 
-		Physics.Raycast(transform.position, groundCheckRayCastDirection.normalized, out hit2, 3f); //needs layering. 
-		Debug.DrawLine (transform.position, transform.position + (groundCheckRayCastDirection.normalized * 3f), Color.yellow); //just so you can see it in the inspector. 
-
+		hit2 = Physics2D.Raycast(transform.position, groundCheckRayCastDirection.normalized, 3f); //needs layering. 
+		Debug.DrawLine (transform.position, new Vector2(transform.position.x, transform.position.y) + (groundCheckRayCastDirection.normalized * 3f), Color.yellow); //just so you can see it in the inspector. 
+	
 		//if there is ground 
 		if (hit2.collider != null) {
-			StartCoroutine (CalculateDirection ()); 
+			if (hit2.collider.tag != "Player") {
+				StartCoroutine (CalculateDirection ()); 
+			}
 		}
 		//if there is no ground
 		else {
@@ -97,9 +90,8 @@ public class AI_Patroler: MonoBehaviour {
 		if (foundPlayer) {
 			direction = player.position - transform.position; 
 			direction.y = 0; 
-			direction.x = 0; 
 		} else {
-			direction = transform.forward.normalized; 
+			direction = transform.right.normalized; 
 		}
 		//if you are calculating the direction it means you are moving so update the time for the speed function. 
 		time += Time.fixedDeltaTime; 
@@ -124,7 +116,7 @@ public class AI_Patroler: MonoBehaviour {
 	}
 	IEnumerator Turn(){
 		//stop all movement and restart the timer for speed function.
-		myRigid.velocity = Vector3.zero; 
+		myRigid.velocity = Vector2.zero; 
 		time = 0; 
 
 		turning_direction_var_control *= -1; 
@@ -132,7 +124,7 @@ public class AI_Patroler: MonoBehaviour {
 			transform.eulerAngles = new Vector3 (0, transform.eulerAngles.y + 10* turning_direction_var_control, 0); 
 			yield return new WaitForSeconds (Time.fixedDeltaTime); 
 		}
-		groundCheckRayCastDirection.z *= -1; 
+		groundCheckRayCastDirection.x *= -1; 
 		StartCoroutine (CheckForPlayer ()); 
 	}
 	IEnumerator Attack(){
