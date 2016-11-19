@@ -26,7 +26,7 @@ public class AI_Shooter : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//inicialize variables
-		origin = new Vector2 (0.1f,-1);//0.1f so that it doent try to go back from the other side when slerping.  
+		origin = new Vector2 (transform.right.x*0.1f,-1);//0.1f so that it doent try to go back from the other side when slerping.  
 		target = transform.right.normalized; 
 		projectile_script = projectile_instance.GetComponent<Projectile_Spirit> (); 
 		//start the cycle. 
