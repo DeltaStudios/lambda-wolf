@@ -43,6 +43,9 @@ public class AI_Patroler: MonoBehaviour {
 			if (hit.collider.tag == "Player") {
 				foundPlayer = true; 
 			}
+			else {
+				foundPlayer = false; 
+			}
 		} else {
 			foundPlayer = false; 
 		}
@@ -62,11 +65,16 @@ public class AI_Patroler: MonoBehaviour {
 		Debug.DrawLine (transform.position, new Vector2(transform.position.x, transform.position.y) + (groundCheckRayCastDirection.normalized * 3f), Color.yellow); //just so you can see it in the inspector. 
 	
 		//if there is ground 
-		if (hit2.collider != null) {
+		if (hit.collider != null && hit2.collider != null) {
+			if (hit.collider.tag != "Player" && hit.collider.tag != "Player") {
+				StartCoroutine (Turn ()); 
+				
+			} 
+		} else if(hit2.collider!=null){
 			if (hit2.collider.tag != "Player") {
 				StartCoroutine (CalculateDirection ()); 
 			}
-		}
+		} 
 		//if there is no ground
 		else {
 			StartCoroutine (Turn ()); 
@@ -129,9 +137,12 @@ public class AI_Patroler: MonoBehaviour {
 	}
 	IEnumerator Attack(){
 		//do some damage to the player. 
-		if (player != null) {
-			Debug.Log ("Hiting");
+		if (player != null && hit.collider != null) {
+			if (hit.collider.tag == "Player") {
+				Debug.Log ("Hiting");
+			}
 		}
+
 		//reset move timer. 
 		time = 0.1f; 
 		yield return new WaitForSeconds(1f);
