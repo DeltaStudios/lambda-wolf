@@ -43,6 +43,9 @@ public class AI_Patroler: MonoBehaviour {
 			if (hit.collider.tag == "Player") {
 				foundPlayer = true; 
 			}
+			else {
+				foundPlayer = false; 
+			}
 		} else {
 			foundPlayer = false; 
 		}
