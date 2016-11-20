@@ -26,7 +26,7 @@ public class AI_Shooter : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//inicialize variables
-		origin = new Vector2 (transform.right.x*0.1f,-1);//0.1f so that it doent try to go back from the other side when slerping.  
+		origin = new Vector2 (transform.right.x,-0.1f);//0.1f so that it doent try to go back from the other side when slerping.  
 		target = transform.right.normalized; 
 		projectile_script = projectile_instance.GetComponent<Projectile_Spirit> (); 
 		//start the cycle. 
@@ -51,12 +51,14 @@ public class AI_Shooter : MonoBehaviour {
 			if (hit.collider!=null) {
 				if (hit.collider.tag == "Player") {
 					//if you find the player, get the direction in which to shoot the bullet and if you are not already shooting, shoot. 
-					playerDirection = (hit.point - new Vector2(transform.position.x, transform.position.y) ).normalized; 
-					if(!alreadyShooting){//avoid calling the routing if you are already perfoming it by using this bool as a lock state. See shoot coroutine. 
+					playerDirection = (hit.point - new Vector2 (transform.position.x, transform.position.y)).normalized; 
+					if (!alreadyShooting) {//avoid calling the routing if you are already perfoming it by using this bool as a lock state. See shoot coroutine. 
 						StartCoroutine (Shoot ()); 
 						alreadyShooting = true; 
 					}
 					yield return new WaitForSeconds (1f);
+				} else {
+					playerDirection = Vector2.zero; 
 				}
 			}
 			yield return new WaitForSeconds (1f/scanSpeed);
@@ -69,7 +71,7 @@ public class AI_Shooter : MonoBehaviour {
 		projectile_script.Direction = playerDirection;  
 		projectile_script.RestartBool = true; 
 		alreadyShooting = false; //free the lock state. 
-		yield return new WaitForSeconds (1);  
+		yield return new WaitForSeconds (projectile_script.lifeTime);  
 	}
 	IEnumerator LoadProjectile(){
 		//prepare the bullet. See the projectile_spirit script. 
