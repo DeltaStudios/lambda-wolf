@@ -134,9 +134,12 @@ public class AI_Patroler: MonoBehaviour {
 	}
 	IEnumerator Attack(){
 		//do some damage to the player. 
-		if (player != null) {
-			Debug.Log ("Hiting");
+		if (player != null && hit.collider != null) {
+			if (hit.collider.tag == "Player") {
+				Debug.Log ("Hiting");
+			}
 		}
+
 		//reset move timer. 
 		time = 0.1f; 
 		yield return new WaitForSeconds(1f);
