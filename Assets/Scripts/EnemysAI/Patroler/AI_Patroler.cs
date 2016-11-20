@@ -62,11 +62,16 @@ public class AI_Patroler: MonoBehaviour {
 		Debug.DrawLine (transform.position, new Vector2(transform.position.x, transform.position.y) + (groundCheckRayCastDirection.normalized * 3f), Color.yellow); //just so you can see it in the inspector. 
 	
 		//if there is ground 
-		if (hit2.collider != null) {
+		if (hit.collider != null && hit2.collider != null) {
+			if (hit.collider.tag != "Player" && hit.collider.tag != "Player") {
+				StartCoroutine (Turn ()); 
+				
+			} 
+		} else if(hit2.collider!=null){
 			if (hit2.collider.tag != "Player") {
 				StartCoroutine (CalculateDirection ()); 
 			}
-		}
+		} 
 		//if there is no ground
 		else {
 			StartCoroutine (Turn ()); 
