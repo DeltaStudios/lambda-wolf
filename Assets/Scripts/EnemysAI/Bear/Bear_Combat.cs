@@ -42,7 +42,7 @@ public class Bear_Combat : MonoBehaviour, IDamagable {
 	IEnumerator CheckDistanceFromPlayer(){
 		DistanceFromPlayer = Mathf.Abs(player.position.x - transform.position.x); 
 		//Debug.Log (DistanceFromPlayer);
-		if (DistanceFromPlayer < 1f) {
+		if (DistanceFromPlayer < 2f) {
 			StartCoroutine (Attack ()); 
 		} else {
 			StartCoroutine (GetClose ()); 

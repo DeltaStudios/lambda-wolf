@@ -64,7 +64,6 @@ public class Bear_Patrol : MonoBehaviour {
 		yield return StartCoroutine (CheckForObstacles());
 	}
 
-
 	public void patrol_stop(){
 		myRigid.velocity = Vector2.zero; 
 		t = 0; 
