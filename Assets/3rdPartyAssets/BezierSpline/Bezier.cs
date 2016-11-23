@@ -32,7 +32,6 @@ public static class Bezier {
 		float[] arcLengths = new float[precision];
 		arcLengths[0] = 0;
 
-		float accumulator = 0;
 		for(var i = 1; i < precision; i += 1) {
 			arcLengths[i] = arcLengths[i-1] + Vector3.Distance(GetPoint(p0,p1,p2,p3,((float)i)/precision), GetPoint(p0,p1,p2,p3,((float)i+1)/precision));
 		}
