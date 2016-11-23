@@ -7,7 +7,6 @@ public class Bear_Combat : MonoBehaviour, IDamagable {
 	private Rigidbody2D myRigid; 
 	private Transform player; 
 	private RaycastHit2D front, back; 
-	private Vector2 direction; 
 	private float DistanceFromPlayer = 0, t, force; 
 	public AnimationCurve SpeedFunction; 
 	public float Speed; 
@@ -22,25 +21,28 @@ public class Bear_Combat : MonoBehaviour, IDamagable {
 	}
 
 	IEnumerator CheckPlayerDirection(){
-		if ((player.position.x - transform.position.x) < 0) {
-			direction = -transform.right; 
-			StartCoroutine (TurnAround ()); 
+		//Debug.Log ((player.position.x - transform.position.x) + ", " + transform.right.x); 
+		if (((player.position.x - transform.position.x) < 0f && transform.right.x >0f)||((player.position.x - transform.position.x) > 0f && transform.right.x <0f)){
+			StartCoroutine (TurnAround ());
 		} else{
-			direction = transform.right; 
 			StartCoroutine (CheckDistanceFromPlayer ()); 
 		} 
 		yield return null; 
 	}
 	IEnumerator TurnAround(){
+		t = 0; 
+		myRigid.velocity = Vector2.zero; 
 		for (int n = 0; n < 18; n++) {
 			transform.Rotate (Vector2.up, 10f); 
 			yield return new WaitForSeconds (2*Time.fixedDeltaTime);
 		}
-		yield return StartCoroutine(CheckDistanceFromPlayer()); 
+		//Debug.Log (transform.right); 
+		yield return StartCoroutine(CheckPlayerDirection()); 
 	}
 	IEnumerator CheckDistanceFromPlayer(){
-		DistanceFromPlayer = player.position.x - transform.position.x; 
-		if (DistanceFromPlayer < 2f) {
+		DistanceFromPlayer = Mathf.Abs(player.position.x - transform.position.x); 
+		//Debug.Log (DistanceFromPlayer);
+		if (DistanceFromPlayer < 1f) {
 			StartCoroutine (Attack ()); 
 		} else {
 			StartCoroutine (GetClose ()); 
@@ -51,20 +53,23 @@ public class Bear_Combat : MonoBehaviour, IDamagable {
 		if (t >= 1) {
 			t = 1; 
 		} else {
-			t += Time.fixedDeltaTime; 
+			t += 2*Time.fixedDeltaTime; 
 		}
+		Debug.Log (t); 
 		//calculate force
 		force = (Mathf.Pow((SpeedFunction.Evaluate(t)*Speed),2)/2f); 
 		//apply force 
 		if (myRigid.velocity.magnitude < Speed / 2) {
-			myRigid.AddForce (direction * force); 
+			myRigid.AddForce (transform.right * force); 
 		}
 		yield return new WaitForSeconds (0.25f); 
 		yield return StartCoroutine (CheckPlayerDirection());
 	}
 	IEnumerator Attack(){
+		myRigid.velocity = Vector2.zero;
 		//Do some damage to player. 
 		Debug.Log("Hitting Player"); 
+		yield return new WaitForSeconds (1f);
 		yield return StartCoroutine(CheckPlayerDirection()); 
 	}
 

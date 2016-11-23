@@ -53,6 +53,7 @@ public class Bear_Patrol : MonoBehaviour {
 		} else {
 			t += Time.fixedDeltaTime; 
 		}
+		//Debug.Log (t);
 		//calculate force
 		force = (Mathf.Pow((SpeedFunction.Evaluate(t)*Speed),2)/2f); 
 		//apply force 
@@ -75,6 +76,7 @@ public class Bear_Patrol : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D something){
 		if (something.tag == "Player") {
+			transform.GetComponent<CircleCollider2D> ().enabled = false; 
 			patrol_stop (); 
 			FoundPlayer (); 
 			Debug.Log ("Found Player"); 
