@@ -18,6 +18,7 @@ public class Stats : MonoBehaviour {
 		}
 		else {
 			HP = 0;
+			Destroy (gameObject);
 		}
 	}
 	// Use this for initialization
