@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Bear_Combat : MonoBehaviour, IDamagable {
+public class Bear_Combat : MonoBehaviour {
 
-	private Bear_Health myHealth;
+	private Stats stats;
 	private Rigidbody2D myRigid; 
 	private Transform player; 
 	private RaycastHit2D front, back; 
@@ -14,7 +14,7 @@ public class Bear_Combat : MonoBehaviour, IDamagable {
 
 
 	void Start () {
-		myHealth = this.gameObject.GetComponent<Bear_Health> (); 
+		stats = this.gameObject.GetComponent<Stats> (); 
 		myRigid = this.gameObject.GetComponent<Rigidbody2D> (); 
 		player = GameObject.FindGameObjectWithTag ("Player").GetComponent<Transform>(); 
 		Bear_Patrol.FoundPlayer += combat_start; 
@@ -67,8 +67,8 @@ public class Bear_Combat : MonoBehaviour, IDamagable {
 	}
 	IEnumerator Attack(){
 		myRigid.velocity = Vector2.zero;
-		//Do some damage to player. 
-		Debug.Log("Hitting Player"); 
+		//Do some damage to player.
+		player.GetComponent<Stats>().updateHealth(-stats.attack);
 		yield return new WaitForSeconds (1f);
 		yield return StartCoroutine(CheckPlayerDirection()); 
 	}
@@ -79,19 +79,6 @@ public class Bear_Combat : MonoBehaviour, IDamagable {
 	}
 	public void combat_start(){
 		StartCoroutine (CheckPlayerDirection ()); 
-	}
-
-	public void DamageMe(float Damage, Vector2 force){
-		//lower this objects health and apply nock back. 
-		myRigid.AddForce(force); 
-		myHealth.Health-=Damage; 
-	}
-	public void DamageMe(Vector2 force){
-		//calculate damage. 
-		float Damage = force.magnitude; 
-		//lower health and apply nockback.  
-		myRigid.AddForce(force); 
-		myHealth.Health-=Damage; 
 	}
 
 }

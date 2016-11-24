@@ -34,6 +34,8 @@ namespace LambdaWolf{
 		private WolfControl wolfControl;
 		private Rigidbody2D rigidbody;
 
+		private bool pastSpecial = false;
+
 		public Grounded(GameObject gameObject): base(gameObject){
 			this.rigidbody = this.gameObject.GetComponent<Rigidbody2D> ();
 			this.wolfControl = this.gameObject.GetComponent<WolfControl> ();
@@ -51,6 +53,22 @@ namespace LambdaWolf{
 
 		public override WolfState HandleInput (GameInput input)
 		{
+			// FIX Later
+			int direction = 1;
+			if (input.horizontal < 0)
+				direction = -1;
+
+			if (!pastSpecial && input.special){
+				pastSpecial = true;
+				GameObject enemy = wolfControl.checkEnemy (direction);
+				Debug.Log ("attacking");
+				if (enemy != null) {
+					Debug.Log ("Dealing damage");
+					enemy.GetComponent<Stats> ().updateHealth (-50);
+				}
+			}
+			if (pastSpecial && !input.special)
+				pastSpecial = false;
 			if (input.horizontal != 0) { // Moving
 				float speed = wolfControl.walkingSpeed;
 
@@ -255,13 +273,18 @@ namespace LambdaWolf{
 
 		[SerializeField] private LayerMask whatIsGround;
 		[SerializeField] public LayerMask itemMask;
+		[SerializeField] private LayerMask enemyMask;
+
 		private WolfState state;
+
+		public Stats stats;
 
 		void Awake(){
 			state = new Grounded(gameObject);
 		}
 		// Use this for initialization
 		void Start () {
+			stats = GetComponent<Stats> ();
 		}
 		
 		// Update is called once per frame
@@ -288,5 +311,11 @@ namespace LambdaWolf{
 			return collision != null;
 		}
 
+
+		public GameObject checkEnemy(int direction){
+			var hit = Physics2D.Raycast (transform.position, Vector2.right * direction, 2,enemyMask);
+
+			return hit.collider == null ? null : hit.collider.gameObject;
+		}
 	}
 }
