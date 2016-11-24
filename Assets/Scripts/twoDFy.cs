@@ -25,6 +25,8 @@ public class twoDFy : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (counterpart == null)
+			Destroy (gameObject);
 		transform.position = ground.GetPoint(
 			(counterpart.position.x-ground.transform.position.x)/groundLength)
 			+Vector3.up*(counterpart.position.y-ground.transform.position.y);
