@@ -2,5 +2,5 @@
 using System.Collections;
 
 public interface IDetectable {
-	void Detect();
+	void OnDetect(Detector d);
 }

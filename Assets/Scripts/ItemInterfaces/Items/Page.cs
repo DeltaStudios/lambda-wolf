@@ -3,10 +3,13 @@ using System.Collections;
 
 public class Page : MonoBehaviour, ICollectable {
 
-	public void TakeItem () {
+	public void OnTake (Collector c) {
 		
 	}
 
+	public void OnDrop(Collector c) {
+		
+	}
 	// Use this for initialization
 	void Start () {
 	

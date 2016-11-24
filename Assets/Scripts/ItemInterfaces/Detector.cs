@@ -1,12 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
-public class Boulder : MonoBehaviour, IPushable {
+public class Detector : MonoBehaviour {
 
-	public void Push () {
-
-	}
-	
 	// Use this for initialization
 	void Start () {
 	

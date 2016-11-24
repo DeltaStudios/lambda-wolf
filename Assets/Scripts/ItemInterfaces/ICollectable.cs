@@ -2,5 +2,6 @@
 using System.Collections;
 
 public interface ICollectable {
-	void TakeItem();
+	void OnTake(Collector c);
+	void OnDrop(Collector c);
 }

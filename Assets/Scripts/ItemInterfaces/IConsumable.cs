@@ -2,5 +2,5 @@
 using System.Collections;
 
 public interface IConsumable {
-	void Consume();
+	void OnConsume(Consumer c);
 }

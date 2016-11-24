@@ -194,7 +194,7 @@ namespace LambdaWolf{
 
 	class Digging : WolfState{
 		private WolfControl wolfControl;
-		private float charge;
+		private float charge = 0;
 
 		public Digging(GameObject gameObject): base(gameObject){
 			this.wolfControl = gameObject.GetComponent<WolfControl>();
@@ -210,6 +210,14 @@ namespace LambdaWolf{
 		{
 			charge += Time.deltaTime;
 			if (charge > wolfControl.diggingTime) {
+				Debug.Log("Dug");
+				var col = Physics2D.OverlapCircle(wolfControl.transform.position + Vector3.down * 0.5f, 1, wolfControl.itemMask);
+				Debug.DrawLine(wolfControl.transform.position + Vector3.down * 0.5f, wolfControl.transform.position + Vector3.down * 1.5f);
+				if(col != null && col.GetComponents(typeof(ICollectable)) != null) {
+					
+					ICollectable item = col.GetComponents(typeof(ICollectable)) [0] as ICollectable;
+					wolfControl.GetComponent<Collector>().Collect(item);
+				}
 				return Transition (new Grounded(this.gameObject));
 			}
 			return this;
@@ -246,6 +254,7 @@ namespace LambdaWolf{
 		public float jumpHeight;
 
 		[SerializeField] private LayerMask whatIsGround;
+		[SerializeField] public LayerMask itemMask;
 		private WolfState state;
 
 		void Awake(){

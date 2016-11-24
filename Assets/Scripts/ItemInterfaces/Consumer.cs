@@ -1,12 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
-public class Boulder : MonoBehaviour, IPushable {
+public class Consumer : MonoBehaviour {
 
-	public void Push () {
-
+	public void Consume(IConsumable item) {
+		item.OnConsume(this);
 	}
-	
+
 	// Use this for initialization
 	void Start () {
 	
