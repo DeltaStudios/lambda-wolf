@@ -20,14 +20,15 @@ public class Elevator : MonoBehaviour, IObserver {
 	}
 
 	IEnumerator Elevate () {
+		Vector2 pastPosition = new Vector2(transform.position.x, transform.position.y);
 		Vector2 pos = new Vector2(transform.position.x, transform.position.y);
 		Vector2 target2d = new Vector2(target.x, target.y);
-		Vector2 direction = pos - target2d;
 
-		while(direction.magnitude > 0.1f) {
-			pos += speed * direction.normalized;
+		while((target2d-pos).magnitude > 0.1f) {
+			pos += speed * (target2d-pos).normalized * Time.fixedDeltaTime;
 			transform.position = new Vector3(pos.x, pos.y, transform.position.z);
 			yield return new WaitForFixedUpdate();
 		}
+		target = pastPosition;
 	}
 }

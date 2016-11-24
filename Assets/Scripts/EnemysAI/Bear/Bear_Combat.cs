@@ -11,6 +11,7 @@ public class Bear_Combat : MonoBehaviour {
 	public AnimationCurve SpeedFunction; 
 	public float Speed; 
 
+	public Animator animator;
 
 
 	void Start () {
@@ -42,7 +43,8 @@ public class Bear_Combat : MonoBehaviour {
 	IEnumerator CheckDistanceFromPlayer(){
 		DistanceFromPlayer = Mathf.Abs(player.position.x - transform.position.x); 
 		//Debug.Log (DistanceFromPlayer);
-		if (DistanceFromPlayer < 2f) {
+		//Fix later consider width of 2 entities
+		if (DistanceFromPlayer < 3f) {
 			StartCoroutine (Attack ()); 
 		} else {
 			StartCoroutine (GetClose ()); 
@@ -55,8 +57,9 @@ public class Bear_Combat : MonoBehaviour {
 		} else {
 			t += 2*Time.fixedDeltaTime; 
 		}
-		Debug.Log (t); 
+		//Debug.Log (t); 
 		//calculate force
+		animator.SetFloat("speed",Speed);
 		force = (Mathf.Pow((SpeedFunction.Evaluate(t)*Speed),2)/2f); 
 		//apply force 
 		if (myRigid.velocity.magnitude < Speed / 2) {
@@ -66,8 +69,10 @@ public class Bear_Combat : MonoBehaviour {
 		yield return StartCoroutine (CheckPlayerDirection());
 	}
 	IEnumerator Attack(){
+		animator.SetTrigger("attack");
 		myRigid.velocity = Vector2.zero;
 		//Do some damage to player.
+		Debug.Log("attacking");
 		player.GetComponent<Stats>().updateHealth(-stats.attack);
 		yield return new WaitForSeconds (1f);
 		yield return StartCoroutine(CheckPlayerDirection()); 

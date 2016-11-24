@@ -12,10 +12,12 @@ public class Bear_Patrol : MonoBehaviour {
 	public delegate void PatrolEvents (); 
 	public static event PatrolEvents FoundPlayer; 
 
+	public Animator animator;
+
 
 	void Start () {
 		myRigid = this.gameObject.GetComponent<Rigidbody2D> (); 
-		StartCoroutine (CheckForObstacles ()); 
+		StartCoroutine (CheckForObstacles ());
 	}
 
 	IEnumerator CheckForObstacles(){
@@ -53,6 +55,8 @@ public class Bear_Patrol : MonoBehaviour {
 		} else {
 			t += Time.fixedDeltaTime; 
 		}
+
+		animator.SetFloat ("speed", Speed);
 		//Debug.Log (t);
 		//calculate force
 		force = (Mathf.Pow((SpeedFunction.Evaluate(t)*Speed),2)/2f); 
