@@ -173,8 +173,15 @@ public class BezierSpline : MonoBehaviour {
 		return GetVelocity(t).normalized;
 	}
 
+	public float GetLength(){
+		float length = 0;
+		for (int i = 0; i < CurveCount; i++) {
+			length += Bezier.GetLength (points [i * 3], points [i * 3 + 1], points [i * 3 + 2], points [i * 3 + 3]);
+		}
+		return length;
+	}
+
 	public void AddCurve () {
-		Debug.Log ("adding curve");
 		Vector3 point = points[points.Length - 1];
 		Array.Resize(ref points, points.Length + 3);
 
